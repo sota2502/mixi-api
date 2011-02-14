@@ -18,6 +18,15 @@ sub DB_PASSWORD {
     return 'Input DB PASSWORD';
 }
 
+sub MEMCACHED_HOSTS {
+    return [qw/Input memcached hosts name and port/];
+}
+
+
+sub MEMCACHED_NAMESPACE {
+    return 'Input memcached namespace';
+}
+
 sub CONSUMER_KEY {
     return 'Input your mixi api consumer key';
 }

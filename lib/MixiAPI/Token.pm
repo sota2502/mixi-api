@@ -54,9 +54,9 @@ sub lookup {
 
     my $self = $class->new({
         code          => $code,
-        access_token  => $row->access_token,
-        refresh_token => $row->refresh_token,
-        expire        => $row->expire,
+        access_token  => $row->{access_token},
+        refresh_token => $row->{refresh_token},
+        expire        => $row->{expire},
     });
     if ( $self->is_expired ) {
         my $ret = $self->refresh;
@@ -192,3 +192,78 @@ sub _number_timestamp {
 
 
 1;
+
+__END__
+
+=encoding utf-8
+
+=pod
+
+=head1 NAME
+
+MixiAPI::Token  - Module for creating and updating easily mixi api token
+
+=head1 SYNOPSIS
+
+  use MixiAPI::Token;
+
+  MixiAPI::Token->create('Authorization code');
+
+  ####
+
+  my $token = MixiAPI->lookup('code');
+  my $user_timeline = MixiAPI::Voice->user_timeline( $code );
+
+=head1 DESCRIPTION
+
+mixi Graph API を扱う際の認証tokenの生成・更新を簡単に扱うためのモジュールです。
+https://mixi.jp/connect_authorize.pl にアクセスすると認証codeが得られます。
+その認証codeによりアクセストークン/リフレッシュトークンを取得します。
+事前にサービスを登録し、Consumer keyとConsumer secretを入手しておいてください。
+
+=head1 CLASS METHOD
+
+=head2 lookup( $code )
+
+認証codeで取得し、DBなどに保存したアクセストークン、リフレッシュトークンを取得し、インスタンスを返します。
+expireされている場合はrefreshを試みます。
+
+=head2 create
+
+https://mixi.jp/connect_authorize.pl にアクセスして得られる認証codeからアクセストークン、リフレッシュトークンを取得し、DBなどに保存します。
+
+=head2 auth_url( $scope )
+
+認証codeを取得するためのURLを生成します。
+本メソッドで生成したURLにアクセスして得られる認証coceにより、アクセストークン/リフレッシュトークンを取得します。
+$scopeはmixi Graph APIのドキュメントを参照ください。
+
+=head1 OBJECT METHOD
+
+=head2 refresh
+
+アクセストークンの再発行を試みます。
+
+=head2 is_expired
+
+アクセストークンの期限が切れているかどうかを返します。
+
+=head1 SEE ALSO
+
+=over 4
+
+=item MixiAPI::Token::Source::DB
+
+取得したアクセストークン/リフレッシュトークンをDB(MySQL, SQLiteなど)へ保存・取得するためのモジュールです。
+
+=item mixi Developer Center
+
+http://developer.mixi.co.jp/connect/mixi_graph_api
+
+=back
+
+=head1 AUTHOR
+
+Souta.Nakamori
+
+=cut

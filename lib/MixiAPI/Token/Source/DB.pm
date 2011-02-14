@@ -75,7 +75,14 @@ sub select {
         Carp::croak( 'fail select:'.  $@ );
     }
 
-    return $row;
+    return unless ( $row );
+
+    return {
+        code          => $row->code,
+        access_token  => $row->access_token,
+        refresh_token => $row->refresh_token,
+        expire        => $row->expire,
+    };
 }
 
 
